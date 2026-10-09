@@ -8,13 +8,13 @@
     <DotNativeSourceRoot Condition="'$(DotNativeSourceRoot)' == ''">$(MSBuildThisFileDirectory)../dotNative</DotNativeSourceRoot>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RootNamespace>DotNative.HoloDatePicker</RootNamespace>
+    <RootNamespace>DotNative.WheelDatePicker</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <IsAotCompatible>true</IsAotCompatible>
     <DotNativePluginKind>Native</DotNativePluginKind>
-    <DotNativePluginEntry>DotNativeHoloDatePickerPlugin</DotNativePluginEntry>
+    <DotNativePluginEntry>DotNativeWheelDatePickerPlugin</DotNativePluginEntry>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="$(DotNativeSourceRoot)/src/DotNative/DotNative.csproj" Condition="Exists('$(DotNativeSourceRoot)/src/DotNative/DotNative.csproj')" />

@@ -27,6 +27,6 @@
     />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../DotNative.HoloDatePicker.csproj" />
+    <ProjectReference Include="../DotNative.WheelDatePicker.csproj" />
   </ItemGroup>
 </Project>

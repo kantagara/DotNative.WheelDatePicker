@@ -3,9 +3,9 @@ using DotNative.Plugins;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace DotNative.HoloDatePicker;
+namespace DotNative.WheelDatePicker;
 
-public interface IHoloDatePicker
+public interface IWheelDatePicker
 {
     /// <summary>Returns the selected date, or null when the dialog is dismissed.</summary>
     Task<DateOnly?> ShowAsync(
@@ -45,13 +45,13 @@ public sealed record DatePickerOptions
     public byte[]? ActionFontData { get; init; }
 }
 
-internal sealed class HoloDatePickerService(
+internal sealed class WheelDatePickerService(
     IOverlayPresenter overlays,
     IUiDispatcher dispatcher,
     IPlatformChannels channels,
     PresentationTarget target,
     DatePickerOptions defaults
-) : IHoloDatePicker
+) : IWheelDatePicker
 {
     private readonly NativeDateRenderer native = new(channels, defaults);
 
@@ -80,20 +80,20 @@ internal sealed class HoloDatePickerService(
                     nameof(options)
                 );
         return overlays.ShowAsync<DateOnly?>(
-            close => new HoloDateDialog(value, close, dispatcher),
+            close => new WheelDateDialog(value, close, dispatcher),
             cancellationToken
         );
     }
 }
 
-public static class HoloDatePickerServices
+public static class WheelDatePickerServices
 {
-    public static IServiceCollection AddHoloDatePicker(
+    public static IServiceCollection AddWheelDatePicker(
         this IServiceCollection services,
         DatePickerOptions? options = null
     )
     {
-        services.TryAddSingleton<IHoloDatePicker>(p => new HoloDatePickerService(
+        services.TryAddSingleton<IWheelDatePicker>(p => new WheelDatePickerService(
             p.GetRequiredService<IOverlayPresenter>(),
             p.GetRequiredService<IUiDispatcher>(),
             p.GetRequiredService<IPlatformChannels>(),
@@ -104,15 +104,15 @@ public static class HoloDatePickerServices
     }
 }
 
-public static class HoloDatePickerServiceProviderExtensions
+public static class WheelDatePickerServiceProviderExtensions
 {
 #if NET10_0_OR_GREATER
     extension(IServiceProvider services)
     {
-        public IHoloDatePicker HoloDatePicker => services.GetRequiredService<IHoloDatePicker>();
+        public IWheelDatePicker WheelDatePicker => services.GetRequiredService<IWheelDatePicker>();
     }
 #else
-    public static IHoloDatePicker HoloDatePicker(this IServiceProvider services) =>
-        services.GetRequiredService<IHoloDatePicker>();
+    public static IWheelDatePicker WheelDatePicker(this IServiceProvider services) =>
+        services.GetRequiredService<IWheelDatePicker>();
 #endif
 }

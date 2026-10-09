@@ -1,12 +1,12 @@
 using System.Globalization;
 using DotNative.Plugins;
 
-namespace DotNative.HoloDatePicker;
+namespace DotNative.WheelDatePicker;
 
 internal sealed class NativeDateRenderer(IPlatformChannels channels, DatePickerOptions defaults)
-    : IHoloDatePicker
+    : IWheelDatePicker
 {
-    private readonly MethodChannel channel = channels.Get("dotnative.holodatepicker");
+    private readonly MethodChannel channel = channels.Get("dotnative.wheeldatepicker");
     private readonly SemaphoreSlim gate = new(1, 1);
 
     public async Task<DateOnly?> ShowAsync(

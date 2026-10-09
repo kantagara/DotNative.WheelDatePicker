@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
   <application
-    android:label="HoloDatePickerDemo"
+    android:label="WheelDatePickerDemo"
     android:theme="@android:style/Theme.Material.Light.NoActionBar"
     android:allowBackup="false"
     android:enableOnBackInvokedCallback="true"

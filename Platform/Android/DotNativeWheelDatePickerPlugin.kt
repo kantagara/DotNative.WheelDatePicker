@@ -6,11 +6,11 @@ import android.app.Dialog
 import java.util.Calendar
 import java.util.GregorianCalendar
 
-private var activeHoloDatePicker: Dialog? = null
+private var activeWheelDatePicker: Dialog? = null
 
-fun DotNativeHoloDatePickerPlugin(activity: Activity) {
-    val channel = NativeChannels.channel("dotnative.holodatepicker")
-    channel.onReset = { activeHoloDatePicker?.dismiss() }
+fun DotNativeWheelDatePickerPlugin(activity: Activity) {
+    val channel = NativeChannels.channel("dotnative.wheeldatepicker")
+    channel.onReset = { activeWheelDatePicker?.dismiss() }
     channel.handle("show") { args, reply ->
         val map = args as? Map<*, *>
         fun date(key: String): Calendar? {
@@ -44,7 +44,7 @@ fun DotNativeHoloDatePickerPlugin(activity: Activity) {
                 initial.after(maximum)
         ) {
             reply.failure("invalid_arguments", "Expected valid date picker options")
-        } else if (activeHoloDatePicker != null || activity.isFinishing || activity.isDestroyed) {
+        } else if (activeWheelDatePicker != null || activity.isFinishing || activity.isDestroyed) {
             reply.failure(
                 "picker_unavailable",
                 "A picker is already open or the activity is unavailable",
@@ -54,7 +54,7 @@ fun DotNativeHoloDatePickerPlugin(activity: Activity) {
             fun finish(value: String?) {
                 if (!finished) {
                     finished = true
-                    activeHoloDatePicker = null
+                    activeWheelDatePicker = null
                     reply.success(value)
                 }
             }
@@ -87,12 +87,12 @@ fun DotNativeHoloDatePickerPlugin(activity: Activity) {
             dialog.setOnCancelListener { finish(null) }
             dialog.setOnDismissListener { finish(null) }
             reply.onCancel = { dialog.dismiss() }
-            activeHoloDatePicker = dialog
+            activeWheelDatePicker = dialog
             dialog.show()
         }
     }
     channel.handle("cancel") { _, reply ->
-        activeHoloDatePicker?.dismiss()
+        activeWheelDatePicker?.dismiss()
         reply.success(null)
     }
 }

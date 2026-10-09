@@ -1,14 +1,14 @@
 using DotNative;
-using DotNative.HoloDatePicker;
+using DotNative.WheelDatePicker;
 
-namespace HoloDatePickerDemo;
+namespace WheelDatePickerDemo;
 
 public static class Program
 {
     public static void Main()
     {
         var builder = DotNativeApplication.CreateBuilder();
-        builder.Services.AddHoloDatePicker();
+        builder.Services.AddWheelDatePicker();
         builder.Build().Run<App>();
     }
 }

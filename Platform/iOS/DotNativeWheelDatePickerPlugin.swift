@@ -1,10 +1,10 @@
 import UIKit
 
-@MainActor enum DotNativeHoloDatePickerPlugin {
+@MainActor enum DotNativeWheelDatePickerPlugin {
   private static var active: NativeDateDialog?
   static func register() {
-    NativeChannels.channel("dotnative.holodatepicker").onReset = { active?.cancel() }
-    NativeChannels.channel("dotnative.holodatepicker").handle("show") { args, reply in
+    NativeChannels.channel("dotnative.wheeldatepicker").onReset = { active?.cancel() }
+    NativeChannels.channel("dotnative.wheeldatepicker").handle("show") { args, reply in
       guard let options = DateOptions(args) else {
         reply.failure("invalid_arguments", "Expected valid date picker options")
         return
@@ -23,7 +23,7 @@ import UIKit
       active = dialog
       presenter.present(dialog, animated: true)
     }
-    NativeChannels.channel("dotnative.holodatepicker").handle("cancel") { _, reply in
+    NativeChannels.channel("dotnative.wheeldatepicker").handle("cancel") { _, reply in
       active?.cancel()
       reply.success(.null)
     }

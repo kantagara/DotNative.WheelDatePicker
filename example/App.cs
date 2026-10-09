@@ -1,16 +1,16 @@
 using DotNative;
-using DotNative.HoloDatePicker;
+using DotNative.WheelDatePicker;
 
-namespace HoloDatePickerDemo;
+namespace WheelDatePickerDemo;
 
-public sealed class App(IHoloDatePicker picker, IUiDispatcher dispatcher) : Component
+public sealed class App(IWheelDatePicker picker, IUiDispatcher dispatcher) : Component
 {
     private readonly State<string> result = new("Choose a date");
     private readonly State<bool> busy = new(false);
 
     public override Element Build() =>
         new VStack(
-            new Text("DotNative.HoloDatePicker").FontSize(24),
+            new Text("DotNative.WheelDatePicker").FontSize(24),
             new Text(result.Value),
             new Button(busy.Value ? "Opening…" : "Choose date", () => _ = ChooseAsync())
         )

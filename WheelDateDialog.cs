@@ -1,9 +1,9 @@
 using System.Globalization;
 using DotNative;
 
-namespace DotNative.HoloDatePicker;
+namespace DotNative.WheelDatePicker;
 
-internal sealed class HoloDateDialog : Component, IDisposable
+internal sealed class WheelDateDialog : Component, IDisposable
 {
     private readonly DatePickerOptions options;
     private readonly Action<DateOnly?> close;
@@ -23,7 +23,7 @@ internal sealed class HoloDateDialog : Component, IDisposable
     private static Color ColorOf(uint bits) =>
         new((byte)(bits >> 16), (byte)(bits >> 8), (byte)bits, (byte)(bits >> 24));
 
-    internal HoloDateDialog(
+    internal WheelDateDialog(
         DatePickerOptions options,
         Action<DateOnly?> close,
         IUiDispatcher dispatcher
