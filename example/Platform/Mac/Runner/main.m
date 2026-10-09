@@ -53,7 +53,7 @@ static void SyncSystemTheme(void) {
     self.window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,520,620)
         styleMask:NSWindowStyleMaskTitled|NSWindowStyleMaskClosable|NSWindowStyleMaskMiniaturizable|NSWindowStyleMaskResizable
         backing:NSBackingStoreBuffered defer:NO];
-    self.window.title = @"PluginExample — DotNative";
+    self.window.title = @"HoloDatePickerDemo — DotNative";
     self.window.releasedWhenClosed = NO;
     MountView *host = [[MountView alloc] initWithFrame:NSMakeRect(0,0,520,620)];
     self.window.contentView = host;
@@ -107,11 +107,11 @@ int main(int argc,char **argv) {
         // AppKit keyboard shortcuts are menu actions. Use terminate: so Quit
         // also follows applicationShouldTerminate and awaits managed cleanup.
         NSMenu *menuBar = [[NSMenu alloc] initWithTitle:@""];
-        NSMenuItem *applicationItem = [[NSMenuItem alloc] initWithTitle:@"PluginExample" action:nil keyEquivalent:@""];
+        NSMenuItem *applicationItem = [[NSMenuItem alloc] initWithTitle:@"HoloDatePickerDemo" action:nil keyEquivalent:@""];
         [menuBar addItem:applicationItem];
 
-        NSMenu *applicationMenu = [[NSMenu alloc] initWithTitle:@"PluginExample"];
-        NSMenuItem *quit = [[NSMenuItem alloc] initWithTitle:@"Quit PluginExample"
+        NSMenu *applicationMenu = [[NSMenu alloc] initWithTitle:@"HoloDatePickerDemo"];
+        NSMenuItem *quit = [[NSMenuItem alloc] initWithTitle:@"Quit HoloDatePickerDemo"
             action:@selector(terminate:) keyEquivalent:@"q"];
         quit.target = app;
         quit.keyEquivalentModifierMask = NSEventModifierFlagCommand;

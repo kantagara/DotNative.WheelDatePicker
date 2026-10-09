@@ -10,6 +10,6 @@ fi
 xcodebuild -project "$app_root/Platform/iOS/Runner.xcodeproj" -scheme Runner \
   -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
   -derivedDataPath "$app_root/obj/DotNative/xcode" CODE_SIGNING_ALLOWED=NO build
-app="$app_root/obj/DotNative/xcode/Build/Products/Debug-iphonesimulator/PluginExample.app"
+app="$app_root/obj/DotNative/xcode/Build/Products/Debug-iphonesimulator/HoloDatePickerDemo.app"
 xcrun simctl install "$simulator" "$app"
 xcrun simctl launch "$simulator" com.example.dotnativeapp

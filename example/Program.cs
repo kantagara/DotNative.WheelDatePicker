@@ -1,7 +1,7 @@
 using DotNative;
 using DotNative.HoloDatePicker;
 
-namespace PluginExample;
+namespace HoloDatePickerDemo;
 
 public static class Program
 {

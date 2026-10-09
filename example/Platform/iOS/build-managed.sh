@@ -11,7 +11,7 @@ out="$runner_dir/obj/DotNative/$rid"
 mkdir -p "$out"
 # Xcode exports TARGETNAME=Runner; MSBuild environment properties are case-insensitive.
 # Remove it for all projects, including local framework ProjectReferences.
-env -u TARGETNAME dotnet publish "$app_root/PluginExample.csproj" -c Release -r "$rid" -o "$out"
+env -u TARGETNAME dotnet publish "$app_root/HoloDatePickerDemo.csproj" -c Release -r "$rid" -o "$out"
 # NativeAOT static archives contain app code only. Link the actual runtime and
 # native package dependencies staged by MSBuild, plus Apple system frameworks.
 python3 - "$out" <<'PY'

@@ -1,6 +1,6 @@
 # DotNative.HoloDatePicker
 
-Three numeric wheels (day, month, year), inspired by HoloDatePicker. Supports bounded dates, looping, labels, and colors. No external UI runtime is required.
+Date selection with automatic native renderers and an optional shared wheel inspired by HoloDatePicker. No external UI runtime is required.
 
 ## Usage
 
@@ -31,36 +31,53 @@ The .NET 9 SDK builds only net9.0; the .NET 10 SDK also builds net10.0 with C# 1
 
 ## Platforms
 
-Android and iOS are implemented. Desktop implementations are not included.
-The custom renderers use a 160-point picker, 36-point rows, 7/18 padding,
-0.95 squeeze, 1.5 diameter ratio, 0.003 perspective, and 0.447 opacity outside
-the flat center band. Each column has two 2-point dividers with spacing equal to
-2% of the screen width. The dialog has 14-point content padding, 24-point title
-and action padding, a 28-point radius, and confirm-before-cancel actions.
+The plugin selects native wheel controls on iOS and Android. macOS, Windows
+and Linux use DotNative's shared `WheelPicker` and `IOverlayPresenter`. The
+shared renderer can also be selected explicitly on every platform.
 
-Pass FontData, TitleFontData, and ActionFontData (TTF/OTF, up to 8 MiB each),
-with FontSize, TitleFontSize and ActionFontSize, to reproduce an application's
-typography. Fonts are hashed, uploaded in bounded chunks, and cached by the
-native plugin. ItemColor controls row text and dividers; TextColor controls the
-title and actions. No native wheel selection overlay is drawn.
+The wheel uses 160-point height, 36-point rows, 7/18 padding, 0.95 squeeze,
+1.5 diameter ratio, 0.003 perspective, and 0.447 opacity outside the center band.
+Rows use centered layout inside the selection dividers. Month and year changes
+clamp the day to a valid calendar date. The dialog fades in and out.
 
-Bounds, leap years, looping, dependent month/day ranges, drag, fling, snapping,
-tap-to-select and accessibility increment/decrement are implemented. Screenshot
-parity across device scales and motion timing have not been independently measured.
+Pass FontData, TitleFontData and ActionFontData with their matching font families
+and sizes to reproduce application typography. DotNative registers the fonts.
+ItemColor controls wheel text and dividers; TextColor controls title and actions.
+SafeArea controls dialog positioning when the host draws beneath system bars.
+
+Screenshot parity and motion timing against the reference remain unmeasured.
+Windows and Linux renderer support is implemented but needs runtime verification
+on those operating systems.
 
 ## Source development
 
-Set `DotNativeSourceRoot` in ignored `dotnative.local.props` to a DotNative checkout,
-or place this repository next to `dotNative`. Otherwise the package reference is used.
+This revision requires the DotNative source checkout containing `WheelPicker`
+and `IOverlayPresenter`; these APIs are not yet in the published preview package.
+Set `DotNativeSourceRoot` in ignored `dotnative.local.props`, or place this
+repository next to `dotNative`. The example imports the same local override.
 
 ```sh
 dotnet build DotNative.HoloDatePicker.csproj
+dotnative plugin run mac --project .
 dotnative plugin run ios --project .
 dotnative plugin run android --project .
 ```
 
-The `example` app opens the real picker. Native sources use the named
-`dotnative.holodatepicker` channel and are included through buildTransitive
-when packaged. No generated channel-descriptor files are required.
+The small example starts on 31 January 2024 with 2023–2025 bounds. Select
+February to check leap-day clamping, then confirm or cancel and read the result.
 
 License: MIT.
+
+## Platform renderer selection
+
+The existing `IHoloDatePicker` service automatically uses UIDatePicker (wheels)
+on iOS and the native spinner DatePickerDialog on Android. macOS, Windows
+and Linux use the shared wheel renderer. Platform detection
+uses the presentation target, including when previewing another device.
+
+Set `DatePickerOptions.Renderer = DatePickerRenderer.SharedWheel` to explicitly
+use the shared wheel. Its scrolling settles at an exact item offset. Font, color,
+perspective, and looping options apply to that shared renderer; native controls
+use the operating system's presentation. Both plugins can be registered together:
+this plugin retains `dotnative.holodatepicker`, while NativeDatePicker retains
+`dotnative.nativedatepicker`.

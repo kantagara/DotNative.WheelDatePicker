@@ -1,7 +1,7 @@
 using DotNative;
 using DotNative.HoloDatePicker;
 
-namespace PluginExample;
+namespace HoloDatePickerDemo;
 
 public sealed class App(IHoloDatePicker picker, IUiDispatcher dispatcher) : Component
 {
@@ -15,7 +15,9 @@ public sealed class App(IHoloDatePicker picker, IUiDispatcher dispatcher) : Comp
             new Button(busy.Value ? "Opening…" : "Choose date", () => _ = ChooseAsync())
         )
             .Padding(24)
-            .BackgroundColor(Color.White);
+            .BackgroundColor(Color.White)
+            .WidthPercent(100)
+            .HeightPercent(100);
 
     private async Task ChooseAsync()
     {
@@ -25,7 +27,17 @@ public sealed class App(IHoloDatePicker picker, IUiDispatcher dispatcher) : Comp
         string text;
         try
         {
-            text = (await picker.ShowAsync())?.ToString("dd.MM.yyyy") ?? "Cancelled";
+            text =
+                (
+                    await picker.ShowAsync(
+                        new DatePickerOptions
+                        {
+                            MinimumDate = new DateOnly(2023, 1, 1),
+                            MaximumDate = new DateOnly(2025, 12, 31),
+                            InitialDate = new DateOnly(2024, 1, 31),
+                        }
+                    )
+                )?.ToString("dd.MM.yyyy") ?? "Cancelled";
         }
         catch (Exception error)
         {

@@ -225,6 +225,13 @@ private static void pluginHook(String type, String method, Class<?>[] arguments,
         NodeView n=(NodeView)view;n.gradientOffsets=offsets;n.gradientColors=colors;n.gradientKind=kind;
         n.gradientSx=sx;n.gradientSy=sy;n.gradientEx=ex;n.gradientEy=ey;applyBox(n);
     }
+    public void projection(View view,float[] values) {
+        NodeView node=(NodeView)view;
+        node.projection=new android.graphics.Matrix();
+        node.projection.setValues(new float[]{values[0],values[4],values[12]*density,
+            values[1],values[5],values[13]*density,values[3]/density,values[7]/density,values[15]});
+        node.invalidate();
+    }
     public void visual(View view,float[] values,int borderColor,int shadowColor,boolean clip){
         NodeView n=(NodeView)view;
         n.setAlpha(values[0]);n.borderWidth=values[1]*density;
@@ -741,6 +748,13 @@ private static void pluginHook(String type, String method, Class<?>[] arguments,
         node.requestLayout();
     }
     private void observeScroll(NodeView node){
+        if(!node.touchObserved){
+            node.touchObserved=true;
+            android.view.GestureDetector tap=new android.view.GestureDetector(this,new android.view.GestureDetector.SimpleOnGestureListener(){
+                @Override public boolean onSingleTapUp(MotionEvent event){NativeHost.event(node.nodeId,12,event.getY()/density,"");return false;}
+            });
+            node.content.setOnTouchListener((view,event)->{tap.onTouchEvent(event);return false;});
+        }
         node.content.setOnScrollChangeListener((v,x,y,oldX,oldY)->node.reportScroll());
     }
     public void scrollPolicy(View view, boolean contain, int axis) {
@@ -905,6 +919,7 @@ private static void pluginHook(String type, String method, Class<?>[] arguments,
     }
 
     private static final class NodeView extends ViewGroup {
+        android.graphics.Matrix projection;
         android.graphics.Bitmap backgroundBitmap;int backgroundFit=1;
         int gradientKind;float[] gradientOffsets;int[] gradientColors;float gradientSx,gradientSy,gradientEx,gradientEy;
         float[] cornerRadii=new float[4],borderWidths=new float[4];int[] borderColors=new int[4],borderStyles=new int[4];
@@ -932,7 +947,7 @@ private static void pluginHook(String type, String method, Class<?>[] arguments,
         boolean updating;int focusRevision;
         private android.graphics.Rect scrollClip;
         int scrollRevision=0,requestedScroll=0;
-        boolean observeScroll=false,pendingScroll=false;
+        boolean observeScroll=false,pendingScroll=false,touchObserved=false;
         float lastOffset=-1,lastViewport=-1;
         int lastScrollRevision=-1;
         void reportScroll(){
@@ -987,6 +1002,11 @@ private static void pluginHook(String type, String method, Class<?>[] arguments,
                     if(kind!=5)content.setOnFocusChangeListener((v,focused)->event(id,4,focused?1:0,""));
                 }
             }
+        }
+        @Override public void draw(android.graphics.Canvas canvas) {
+            int saved=canvas.save();
+            if(projection!=null){canvas.translate(getWidth()/2f,getHeight()/2f);canvas.concat(projection);canvas.translate(-getWidth()/2f,-getHeight()/2f);}
+            super.draw(canvas);canvas.restoreToCount(saved);
         }
         @Override protected void dispatchDraw(android.graphics.Canvas canvas){
             BoxShape shape=new BoxShape(this,new android.graphics.RectF(0,0,getWidth(),getHeight()));int save=canvas.save();if(clip)canvas.clipPath(shape.outer);
