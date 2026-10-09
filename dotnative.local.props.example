@@ -1,0 +1,5 @@
+<Project>
+  <PropertyGroup>
+    <DotNativeSourceRoot>/path/to/DotNative</DotNativeSourceRoot>
+  </PropertyGroup>
+</Project>

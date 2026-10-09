@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <PublishAot>true</PublishAot>
+    <PublishAotUsingRuntimePack Condition="'$(RuntimeIdentifier)' != 'osx-arm64'"
+      >true</PublishAotUsingRuntimePack>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''"
+      >iossimulator-arm64</RuntimeIdentifier>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="**/*.cs" Exclude="bin/**;obj/**;artifacts/**;Platform/**;.dotnative/**" />
+    <PackageReference
+      Condition="'$(DotNativeDevelopment)' != 'true'"
+      Include="DotNative.App"
+      Version="0.1.0-preview.10"
+    />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../DotNative.HoloDatePicker.csproj" />
+  </ItemGroup>
+</Project>

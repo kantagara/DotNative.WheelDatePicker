@@ -1,0 +1,14 @@
+<Project>
+  <ItemGroup Condition="$([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('ios'))">
+    <DotNativeNativeSource Include="$(MSBuildThisFileDirectory)../Platform/iOS/**/*.swift" />
+    <DotNativePluginEntry Include="DotNativeHoloDatePickerPlugin" />
+  </ItemGroup>
+  <ItemGroup Condition="$([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('android-'))">
+    <DotNativeNativeSource Include="$(MSBuildThisFileDirectory)../Platform/Android/**/*.kt" />
+    <DotNativePluginEntry Include="DotNativeHoloDatePickerPlugin" />
+  </ItemGroup>
+  <ItemGroup Condition="$([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('linux-bionic-'))">
+    <DotNativeNativeSource Include="$(MSBuildThisFileDirectory)../Platform/Android/**/*.kt" />
+    <DotNativePluginEntry Include="DotNativeHoloDatePickerPlugin" />
+  </ItemGroup>
+</Project>
