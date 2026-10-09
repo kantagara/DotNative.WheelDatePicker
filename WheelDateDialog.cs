@@ -18,7 +18,6 @@ internal sealed class WheelDateDialog : Component, IDisposable
         actionFont;
     private bool closing;
     private bool disposed;
-    private float screenWidth = 375;
 
     private static Color ColorOf(uint bits) =>
         new((byte)(bits >> 16), (byte)(bits >> 8), (byte)bits, (byte)(bits >> 24));
@@ -52,6 +51,7 @@ internal sealed class WheelDateDialog : Component, IDisposable
             new(items, index, changed, dispatcher)
             {
                 Looping = options.Looping,
+                ShowDividers = false,
                 Font = itemFont,
                 FontSize = options.FontSize,
                 Foreground = ColorOf(options.ItemColor),
@@ -152,7 +152,6 @@ internal sealed class WheelDateDialog : Component, IDisposable
     public override Element Build(BuildContext context)
     {
         var viewport = context.Get<ViewportSize>();
-        screenWidth = viewport.Width;
         var width = Math.Max(1, Math.Min(328, viewport.Width - 80));
         var titleHeight = MathF.Ceiling(options.TitleFontSize * 4 / 3);
         var height = 24 + titleHeight + 160 + 72;
@@ -175,6 +174,29 @@ internal sealed class WheelDateDialog : Component, IDisposable
                 .Padding(12, 0)
                 .CornerRadius(20)
                 .OnState(InteractionState.Pressed, new(Background: new Color(0, 0, 0, 26)));
+        var dividerSpacing = viewport.Width * 0.02f;
+        Element Divider(float top)
+        {
+            Element Segment() =>
+                new Container(
+                    new Container()
+                        .BackgroundColor(ColorOf(options.ItemColor))
+                        .Position(PositionMode.Absolute)
+                        .Left(dividerSpacing)
+                        .Right(dividerSpacing)
+                        .Top(0)
+                        .Height(2)
+                )
+                    .Width(0)
+                    .Grow()
+                    .Height(2);
+            return new HStack(Segment(), Segment(), Segment())
+                .Position(PositionMode.Absolute)
+                .Left(14)
+                .Right(14)
+                .Top(top)
+                .Height(2);
+        }
         // A transparent surface blocks taps inside the panel from reaching the dismissing backdrop.
         var panel = new VStack(
             new Button("", () => { })
@@ -192,15 +214,17 @@ internal sealed class WheelDateDialog : Component, IDisposable
                 .Top(24)
                 .Height(titleHeight),
             new HStack(
-                new Container(day).Grow(),
-                new Container(month).Grow(),
-                new Container(year).Grow()
+                new Container(day).Width(0).Grow(),
+                new Container(month).Width(0).Grow(),
+                new Container(year).Width(0).Grow()
             )
                 .Position(PositionMode.Absolute)
                 .Left(14)
                 .Right(14)
                 .Top(24 + titleHeight)
                 .Height(160),
+            Divider(24 + titleHeight + 80 - 18 - 1),
+            Divider(24 + titleHeight + 80 + 18 - 1),
             new HStack(
                 Action(options.ConfirmText, () => _ = FinishAsync(selected.Value)),
                 Action(options.CancelText, () => _ = FinishAsync(null))
