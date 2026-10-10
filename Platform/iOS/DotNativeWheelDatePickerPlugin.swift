@@ -47,6 +47,7 @@ import UIKit
   private let background: UIColor
   private let foreground: UIColor
   private let font: UIFont
+  private let locale: Locale?
   private static let calendar = Calendar(identifier: .gregorian)
 
   init(options: DateOptions, completion: @escaping (String?) -> Void) {
@@ -63,6 +64,7 @@ import UIKit
     background = options.background
     foreground = options.foreground
     font = options.font
+    locale = options.locale
     self.completion = completion
     super.init(nibName: nil, bundle: nil)
     modalPresentationStyle = .overFullScreen
@@ -91,6 +93,7 @@ import UIKit
     picker.datePickerMode = .date
     picker.preferredDatePickerStyle = .wheels
     picker.calendar = Self.calendar
+    picker.locale = locale
     picker.minimumDate = Self.calendar.date(from: minimum)
     picker.maximumDate = Self.calendar.date(from: maximum)
     picker.date = Self.calendar.date(from: DateComponents(year: year, month: month, day: day))!
@@ -146,6 +149,7 @@ import UIKit
   let background: UIColor
   let foreground: UIColor
   let font: UIFont
+  let locale: Locale?
   init?(_ args: PluginValue) {
     guard case .map(let map) = args else { return nil }
     func text(_ key: String) -> String? {
@@ -170,6 +174,7 @@ import UIKit
     self.title = title
     self.confirm = confirm
     self.cancel = cancel
+    locale = text("locale").map { Locale(identifier: $0) }
     if case .bool(let value)? = map["looping"] { looping = value } else { looping = true }
     func color(_ key: String, _ fallback: Int64) -> UIColor {
       let bits: Int64

@@ -23,6 +23,9 @@ public enum DatePickerRenderer
 public sealed record DatePickerOptions
 {
     public DatePickerRenderer Renderer { get; init; } = DatePickerRenderer.Automatic;
+
+    /// <summary>Locale tag such as en-US or sr-Latn-RS. Null uses the current platform locale.</summary>
+    public string? Locale { get; init; }
     public DateOnly MinimumDate { get; init; } = new(1900, 1, 1);
     public DateOnly MaximumDate { get; init; } = new(2100, 12, 31);
     public DateOnly? InitialDate { get; init; }
@@ -61,6 +64,8 @@ internal sealed class WheelDatePickerService(
     )
     {
         var value = options ?? defaults;
+        if (value.Locale is { } locale)
+            value = value with { Locale = DatePickerLocale.Resolve(locale).Name };
         if (!Enum.IsDefined(value.Renderer))
             throw new ArgumentOutOfRangeException(nameof(options));
         if (

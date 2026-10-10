@@ -12,6 +12,7 @@ builder.Services.AddWheelDatePicker(new DatePickerOptions
     MinimumDate = new(1930, 1, 1),
     MaximumDate = DateOnly.FromDateTime(DateTime.Today),
     Title = "Datum rođenja",
+    Locale = "sr-Latn-RS",
     ConfirmText = "Sačuvaj",
     CancelText = "Otkaži",
 });
@@ -28,6 +29,31 @@ only one dialog per native plugin can be open. Cancellation dismisses the dialog
 On net10.0 and later, `services.WheelDatePicker` is an extension property.
 On net9.0, use `services.WheelDatePicker()`. The APIs are mutually exclusive.
 The .NET 9 SDK builds only net9.0; the .NET 10 SDK also builds net10.0 with C# 14.
+
+## Locale
+
+Set `Locale` at registration or for an individual dialog:
+
+```csharp
+var date = await picker.ShowAsync(new DatePickerOptions { Locale = "en-US" });
+```
+
+| Locale | Column order |
+| --- | --- |
+| `sr-Latn-RS`, `en-GB` | Day, month, year |
+| `en-US` | Month, day, year |
+| `ja-JP` | Year, month, day |
+
+Null uses the platform locale (the shared renderer uses `CultureInfo.CurrentCulture`).
+The shared wheel derives the order from the culture's short date pattern and
+keeps its numeric labels. iOS uses `UIDatePicker.locale`. Android uses native
+`NumberPicker` controls in a localized dialog context, with localized month names
+and the locale's date order. This avoids the legacy spinner dialog's use of the
+process-wide default locale. No global application locale is changed.
+
+Dates and bounds remain Gregorian `DateOnly` values; the native channel still
+uses ISO `yyyy-MM-dd`. Locale does not translate the application-provided `Title`,
+`ConfirmText`, or `CancelText`. Invalid culture names throw before presentation.
 
 ## Platforms
 
@@ -71,7 +97,7 @@ License: MIT.
 ## Platform renderer selection
 
 The existing `IWheelDatePicker` service automatically uses UIDatePicker (wheels)
-on iOS and the native spinner DatePickerDialog on Android. macOS, Windows
+on iOS and native NumberPicker wheels on Android. macOS, Windows
 and Linux use the shared wheel renderer. Platform detection
 uses the presentation target, including when previewing another device.
 

@@ -9,6 +9,7 @@ internal sealed class WheelDateDialog : Component, IDisposable
     private readonly Action<DateOnly?> close;
     private readonly IUiDispatcher dispatcher;
     private readonly State<DateOnly> selected;
+    private readonly char[] dateOrder;
     private readonly AnimationController fade;
     private readonly WheelPicker day,
         month,
@@ -31,6 +32,7 @@ internal sealed class WheelDateDialog : Component, IDisposable
         this.options = options;
         this.close = close;
         this.dispatcher = dispatcher;
+        dateOrder = DatePickerLocale.Order(DatePickerLocale.Resolve(options.Locale));
         var initial = options.InitialDate ?? DateOnly.FromDateTime(DateTime.Today);
         if (initial < options.MinimumDate)
             initial = options.MinimumDate;
@@ -197,6 +199,15 @@ internal sealed class WheelDateDialog : Component, IDisposable
                 .Top(top)
                 .Height(2);
         }
+        Element DateColumn(char part) => new Container(
+                part switch
+                {
+                    'd' => day,
+                    'M' => month,
+                    _ => year,
+                }
+            ).Width(0).Grow().WithKey(part.ToString());
+
         // A transparent surface blocks taps inside the panel from reaching the dismissing backdrop.
         var panel = new VStack(
             new Button("", () => { })
@@ -213,11 +224,8 @@ internal sealed class WheelDateDialog : Component, IDisposable
                 .Right(24)
                 .Top(24)
                 .Height(titleHeight),
-            new HStack(
-                new Container(day).Width(0).Grow(),
-                new Container(month).Width(0).Grow(),
-                new Container(year).Width(0).Grow()
-            )
+            new HStack(dateOrder.Select(DateColumn).ToArray())
+                .FlowDirection(FlowDirection.LeftToRight)
                 .Position(PositionMode.Absolute)
                 .Left(14)
                 .Right(14)

@@ -50,6 +50,8 @@ internal sealed class NativeDateRenderer(IPlatformChannels channels, DatePickerO
                         ["title"] = value.Title,
                         ["confirmText"] = value.ConfirmText,
                         ["cancelText"] = value.CancelText,
+                        ["locale"] = value.Locale,
+                        ["looping"] = value.Looping,
                     },
                     cancellationToken
                 )
