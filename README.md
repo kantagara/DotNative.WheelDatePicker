@@ -107,3 +107,15 @@ perspective, and looping options apply to that shared renderer; native controls
 use the operating system's presentation. Both plugins can be registered together:
 this plugin retains `dotnative.wheeldatepicker`, while NativeDatePicker retains
 `dotnative.nativedatepicker`.
+
+## Direct use (no registration)
+
+```csharp
+var date = await WheelDatePicker.ShowAsync(
+    overlays, dispatcher, channels, target, options, cancellationToken);
+```
+
+Pass the active application's host resources. Native dialogs serialize per channel
+host even when called through separate static invocations; different application
+hosts stay independent. Existing `IWheelDatePicker` / `AddWheelDatePicker` remain
+available for applications that prefer constructor injection or configured defaults.

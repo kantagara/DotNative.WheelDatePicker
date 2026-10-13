@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using DotNative.Plugins;
 
 namespace DotNative.WheelDatePicker;
@@ -7,7 +8,8 @@ internal sealed class NativeDateRenderer(IPlatformChannels channels, DatePickerO
     : IWheelDatePicker
 {
     private readonly MethodChannel channel = channels.Get("dotnative.wheeldatepicker");
-    private readonly SemaphoreSlim gate = new(1, 1);
+    private static readonly ConditionalWeakTable<IPlatformChannels, SemaphoreSlim> Gates = new();
+    private readonly SemaphoreSlim gate = Gates.GetValue(channels, _ => new(1, 1));
 
     public async Task<DateOnly?> ShowAsync(
         DatePickerOptions? options = null,

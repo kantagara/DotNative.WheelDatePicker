@@ -91,6 +91,26 @@ internal sealed class WheelDatePickerService(
     }
 }
 
+/// <summary>Shows a date picker on the supplied application host without plugin registration.</summary>
+public static class WheelDatePicker
+{
+    public static Task<DateOnly?> ShowAsync(
+        IOverlayPresenter overlays,
+        IUiDispatcher dispatcher,
+        IPlatformChannels channels,
+        PresentationTarget target,
+        DatePickerOptions? options = null,
+        CancellationToken cancellationToken = default
+    ) =>
+        new WheelDatePickerService(
+            overlays,
+            dispatcher,
+            channels,
+            target,
+            options ?? new()
+        ).ShowAsync(options, cancellationToken);
+}
+
 public static class WheelDatePickerServices
 {
     public static IServiceCollection AddWheelDatePicker(
